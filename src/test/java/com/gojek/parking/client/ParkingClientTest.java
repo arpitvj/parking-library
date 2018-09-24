@@ -1,4 +1,4 @@
-package com.gojek.parking;
+package com.gojek.parking.client;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
