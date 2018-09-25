@@ -2,6 +2,7 @@ package com.gojek.parking.service.impl;
 
 import java.util.List;
 
+import com.gojek.parking.model.data.ParkingSlot;
 import com.gojek.parking.service.ParkingService;
 
 public class ParkingServiceImpl implements ParkingService {
@@ -16,7 +17,7 @@ public class ParkingServiceImpl implements ParkingService {
 		return null;
 	}
 
-	public void freeSlot(int slotNumber) {
+	public void vacateSlot(int slotNumber) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -32,6 +33,11 @@ public class ParkingServiceImpl implements ParkingService {
 	}
 
 	public List<Integer> trackCarWithColor(String color) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<ParkingSlot> status() {
 		// TODO Auto-generated method stub
 		return null;
 	}

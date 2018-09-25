@@ -1,1 +1,5 @@
-/Users/avijayvargiy/eclipse-workspace/parking_lot/parking-library/src/main/java/com/gojek/parking/ParkingClient.java
+/Users/avijayvargiy/eclipse-workspace/parking_lot/parking-library/src/main/java/com/gojek/parking/model/data/Vehicle.java
+/Users/avijayvargiy/eclipse-workspace/parking_lot/parking-library/src/main/java/com/gojek/parking/service/ParkingService.java
+/Users/avijayvargiy/eclipse-workspace/parking_lot/parking-library/src/main/java/com/gojek/parking/client/ParkingClient.java
+/Users/avijayvargiy/eclipse-workspace/parking_lot/parking-library/src/main/java/com/gojek/parking/service/impl/ParkingServiceImpl.java
+/Users/avijayvargiy/eclipse-workspace/parking_lot/parking-library/src/main/java/com/gojek/parking/model/data/ParkingSlot.java

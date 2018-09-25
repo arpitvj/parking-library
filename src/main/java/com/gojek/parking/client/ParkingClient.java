@@ -2,6 +2,9 @@ package com.gojek.parking.client;
 
 import java.util.List;
 
+import com.gojek.parking.service.ParkingService;
+import com.gojek.parking.service.impl.ParkingServiceImpl;
+
 /**
  * 
  * @author avijayvargiy
@@ -10,28 +13,69 @@ import java.util.List;
 public class ParkingClient 
 {
 	
-    public String createParkingLot(int noOfLots) {
+	ParkingService parkingService;
+	
+	ParkingClient(){
+		parkingService = new ParkingServiceImpl();
+	}
+	
+	/**
+	 * Creates parking lots
+	 * @param noOfLots
+	 * @return
+	 */
+    public String createParkingLot(int noOfSlots) {
     	
-    	return 
+    	return parkingService.createSlot(noOfSlots);
     }
     
-    public String issueTicket(String regNumber, String color) {
+    /**
+     * Generated parking ticket for the vehicle
+     * @param regNumber
+     * @param color
+     * @return
+     */
+    public String generateTicket(String regNumber, String color) {
     	
+    	return parkingService.generateTicket(regNumber, color);
     }
     
-    public void markExit(int slotNumber) {
+    /**
+     * Marks the parking slot empty
+     * @param slotNumber
+     */
+    public void vacateSlot(int slotNumber) {
     	
+    	parkingService.vacateSlot(slotNumber);
     }
     
+    /**
+     * Returns the list of vehicle registration numbers with the color
+     * @param color
+     * @return
+     */
     public List<String> registrationNumbers(String color) {
     	
+    	return parkingService.registrationNumbers(color);
     }
     
+    /**
+     * Returns the parking slot of the registration number of car
+     * @param regNumber
+     * @return
+     */
     public int checkCarPosition(String regNumber) {
     	
+    	return parkingService.checkCarSlot(regNumber);
     }
     
+    /**
+     * 
+     * @param color
+     * @return
+     */
     public List<Integer> trackCarWithColor(String color) {
-    	
+    
+    	return parkingService.trackCarWithColor(color);
     }
 }
