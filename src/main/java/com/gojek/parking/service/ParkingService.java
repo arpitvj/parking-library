@@ -6,7 +6,7 @@ import com.gojek.parking.model.data.ParkingSlot;
 
 public interface ParkingService {
 
-	String createSlot(int noOfSlots);
+	void createSlot(int noOfSlots);
 	
 	String generateTicket(String regNumber, String color);
 	

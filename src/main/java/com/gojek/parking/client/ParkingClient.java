@@ -24,9 +24,9 @@ public class ParkingClient
 	 * @param noOfLots
 	 * @return
 	 */
-    public String createParkingLot(int noOfSlots) {
+    public void createParkingLot(int noOfSlots) {
     	
-    	return parkingService.createSlot(noOfSlots);
+    	parkingService.createSlot(noOfSlots);
     }
     
     /**

@@ -15,15 +15,24 @@ public class Boot {
 			
 			String command = "";
 			
-			if(inputLine.equals(ApplicationConstants.EMPTY)) {
+			if(inputLine.equals(ApplicationConstants.EXIT)) {
+				break;
+			} else if(inputLine.equals(ApplicationConstants.EMPTY)) {
 				System.out.println("Please enter correct input. \n");
-				inputLine = "";
 			} else {
 				
+				String[] splitValues = inputLine.split(" ");
 				command = inputLine.split(" ")[0];
 				if(command.equals(ApplicationConstants.CREATE_PARKING_LOT)) {
 					
-					parkingClient.createParkingLot();
+					int convertedInt = convertRawToInt(splitValues[1]);
+					if(convertedInt > 0) {
+						
+						parkingClient.createParkingLot(convertedInt);
+					} else {
+						
+						System.out.println("Incorrect command format. Please try again with correct format.");
+					}
 				} else if(command.equals(ApplicationConstants.PARK)) {
 					
 				} else if(command.equals(ApplicationConstants.LEAVE)) {
@@ -36,11 +45,19 @@ public class Boot {
 					
 				} else {
 					System.out.println("Please enter correct input. \n");
-					inputLine = "";
 				}
 			}
 		}
 		
 		sc.close();
+	}
+	
+	private static int convertRawToInt(String value) {
+		
+		try {
+			return Integer.valueOf(value);
+		} catch(NumberFormatException e) {
+			return -1;
+		}
 	}
 }
