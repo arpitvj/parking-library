@@ -35,9 +35,9 @@ public class ParkingClient
      * @param color
      * @return
      */
-    public String generateTicket(String regNumber, String color) {
+    public void generateTicket(String regNumber, String color) {
     	
-    	return parkingService.generateTicket(regNumber, color);
+    	parkingService.generateTicket(regNumber, color);
     }
     
     /**
@@ -54,9 +54,9 @@ public class ParkingClient
      * @param color
      * @return
      */
-    public List<String> registrationNumbers(String color) {
+    public void registrationNumbers(String color) {
     	
-    	return parkingService.registrationNumbers(color);
+    	parkingService.registrationNumbers(color);
     }
     
     /**

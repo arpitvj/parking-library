@@ -1,14 +1,16 @@
 package com.gojek.parking.model.data;
 
 public class ParkingSlot {
-	// assuming slots be max 20 on each level
+	
 	int slotNumber;
 	
-	Level level;
+	int level;
 	
-	boolean isOccupied;
+	boolean isOccupied = false;
 	
 	Vehicle vehicle;
+	
+	
 
 	public int getSlotNumber() {
 		return slotNumber;
@@ -26,11 +28,11 @@ public class ParkingSlot {
 		this.isOccupied = isOccupied;
 	}
 
-	public Level getLevel() {
+	public int getLevel() {
 		return level;
 	}
 
-	public void setLevel(Level level) {
+	public void setLevel(int level) {
 		this.level = level;
 	}
 
@@ -42,14 +44,14 @@ public class ParkingSlot {
 		this.vehicle = vehicle;
 	}
 
-	public ParkingSlot(int slotNumber, Level level, boolean isOccupied) {
+	public ParkingSlot(int slotNumber, int level, boolean isOccupied) {
 		super();
 		this.slotNumber = slotNumber;
 		this.level = level;
 		this.isOccupied = isOccupied;
 	}
 	
-	public ParkingSlot(int slotNumber, Level level, boolean isOccupied, Vehicle vehicle) {
+	public ParkingSlot(int slotNumber, int level, boolean isOccupied, Vehicle vehicle) {
 		super();
 		this.slotNumber = slotNumber;
 		this.level = level;

@@ -50,8 +50,13 @@ public class Boot {
 					parkingClient.status();
 				} else if(command.equals(ApplicationConstants.REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOR)) {
 					
+					parkingClient.registrationNumbers(splitValues[1]);
+				} else if(command.equals(ApplicationConstants.SLOT_NUMBER_FOR_REGISTRATION_NUMBER)) {
+					
+					parkingClient.checkCarPosition(splitValues[1]);
 				} else if(command.equals(ApplicationConstants.SLOT_NUMBERS_FOR_CARS_WITH_COLOR)) {
 					
+					parkingClient.trackCarWithColor(splitValues[1]);
 				} else {
 					System.out.println("Please enter correct input. \n");
 				}
