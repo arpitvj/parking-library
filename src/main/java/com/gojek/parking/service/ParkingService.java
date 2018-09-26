@@ -12,9 +12,9 @@ public interface ParkingService {
 	
 	void vacateSlot(int slotNumber);
 	
-	List<String> registrationNumbers(String color);
+	void registrationNumbers(String color);
 	
-	int checkCarSlot(String regNumber);
+	void checkCarSlot(String regNumber);
 	
 	void trackCarWithColor(String color);
 	

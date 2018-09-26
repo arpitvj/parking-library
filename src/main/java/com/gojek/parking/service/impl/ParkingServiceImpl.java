@@ -19,7 +19,6 @@ public class ParkingServiceImpl implements ParkingService {
 	private Level[] totalLevels = Level.values();
 	
 	public void createSlot(int noOfSlots) {
-		//Created a parking lot with 6 slots
 		
 		int remainingSlots = (maxSlotsOnEachLevel * totalLevels.length) - noOfSlots;
 		
@@ -66,21 +65,34 @@ public class ParkingServiceImpl implements ParkingService {
 		System.out.println("Slot number "+ slotNumber +" is free");
 	}
 
-	public List<String> registrationNumbers(String color) {
+	public void registrationNumbers(String color) {
 		
-		return null;
+		List<String> slots = parkingSlots.stream().filter(p -> (p.isOccupied() == true) && (p.getVehicle().getColor().equals(color)))
+		.map(m -> m.getVehicle().getRegistrationNumber())
+		.collect(Collectors.toList());
+		
+		String slotsCommaSeparated = String.join(",", slots);
+
+		System.out.println(slotsCommaSeparated);
 	}
 
-	public int checkCarSlot(String regNumber) {
+	public void checkCarSlot(String regNumber) {
 		
+		Optional<ParkingSlot> parkingSlot = parkingSlots.stream().filter(p -> (p.isOccupied() == true) && (p.getVehicle().getRegistrationNumber().equals(regNumber))).findFirst();
 		
-		return 0;
+		parkingSlot.ifPresent(slot -> {
+			System.out.println(slot.getSlotNumber());
+		});
+		
+		if(!parkingSlot.isPresent()) {
+			System.out.println("Not found");
+		}
 	}
 
 	public void trackCarWithColor(String color) {
 		
 		List<String> slots = parkingSlots.stream().filter(p -> (p.isOccupied() == true) && (p.getVehicle().getColor().equals(color)))
-		.map(m -> m.getVehicle().getRegistrationNumber())
+		.map(m -> String.valueOf(m.getSlotNumber()))
 		.collect(Collectors.toList());
 		
 		String slotsCommaSeparated = String.join(",", slots);

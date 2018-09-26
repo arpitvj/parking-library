@@ -64,9 +64,9 @@ public class ParkingClient
      * @param regNumber
      * @return
      */
-    public int checkCarPosition(String regNumber) {
+    public void checkCarPosition(String regNumber) {
     	
-    	return parkingService.checkCarSlot(regNumber);
+    	parkingService.checkCarSlot(regNumber);
     }
     
     /**
