@@ -1,7 +1,10 @@
 package com.gojek.parking.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.gojek.parking.model.data.Level;
 import com.gojek.parking.model.data.ParkingSlot;
@@ -21,7 +24,6 @@ public class ParkingServiceImpl implements ParkingService {
 		int remainingSlots = (maxSlotsOnEachLevel * totalLevels.length) - noOfSlots;
 		
 		if(remainingSlots >= 0) {
-			System.out.println("Created a parking lot with "+ noOfSlots +" slots");
 			
 			for(int i=0; i < noOfSlots; i++) {
 				
@@ -31,48 +33,73 @@ public class ParkingServiceImpl implements ParkingService {
 					currentLevel++;
 					parkingSlots.add(new ParkingSlot(lastSlotNumber + 1, totalLevels[currentLevel], false));
 					lastSlotNumber++;
-					System.out.println("Allocated slot number: " + lastSlotNumber);
 				} else {
 					
 					parkingSlots.add(new ParkingSlot(lastSlotNumber + 1, totalLevels[currentLevel], false));
 					lastSlotNumber++;
-					System.out.println("Allocated slot number: " + lastSlotNumber);
 				}
 			}
+			
+			System.out.println("Created a parking lot with " + noOfSlots + " slots");
 		} else {
-			System.out.println("Cannot allot "+noOfSlots+" slots. Not enough space.");
+			System.out.println("Cannot allot "+noOfSlots+" slots. No parking space left on any level.");
 		}
-
 	}
 
 	public String generateTicket(String regNumber, String color) {
-		// TODO Auto-generated method stub
+		
+		
 		return null;
 	}
 
 	public void vacateSlot(int slotNumber) {
-		// TODO Auto-generated method stub
 		
+		Optional<ParkingSlot> parkingSlot = parkingSlots.stream().filter(p -> p.getSlotNumber() == slotNumber).findFirst();
+		parkingSlot.ifPresent(slot -> {
+			slot.setOccupied(false);
+			slot.setVehicle(null);	
+		});
+		
+		parkingSlots.removeIf(x -> x.getSlotNumber() == slotNumber);
+		parkingSlots.add(parkingSlot.get());
+		
+		System.out.println("Slot number "+ slotNumber +" is free");
 	}
 
 	public List<String> registrationNumbers(String color) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public int checkCarSlot(String regNumber) {
-		// TODO Auto-generated method stub
+		
+		
 		return 0;
 	}
 
-	public List<Integer> trackCarWithColor(String color) {
-		// TODO Auto-generated method stub
-		return null;
+	public void trackCarWithColor(String color) {
+		
+		List<String> slots = parkingSlots.stream().filter(p -> (p.isOccupied() == true) && (p.getVehicle().getColor().equals(color)))
+		.map(m -> m.getVehicle().getRegistrationNumber())
+		.collect(Collectors.toList());
+		
+		String slotsCommaSeparated = String.join(",", slots);
+
+		System.out.println(slotsCommaSeparated);
 	}
 
-	public List<ParkingSlot> status() {
-		// TODO Auto-generated method stub
-		return null;
+	public void status() {
+		
+		System.out.printf("%10s %30s %20s", "Slot No.", "Registration No", "Colour");
+		parkingSlots.stream().filter(p -> p.isOccupied() == true).map(parkingSlot -> {
+			
+			int slotNumber = parkingSlot.getSlotNumber();
+			String registrationNumber = parkingSlot.getVehicle().getRegistrationNumber();
+			String colour = parkingSlot.getVehicle().getColor();
+			
+			System.out.printf("%10o %30s %20s", slotNumber, registrationNumber, colour);
+			return parkingSlot;
+		});
 	}
 
 }

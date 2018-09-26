@@ -74,8 +74,13 @@ public class ParkingClient
      * @param color
      * @return
      */
-    public List<Integer> trackCarWithColor(String color) {
+    public void trackCarWithColor(String color) {
     
-    	return parkingService.trackCarWithColor(color);
+    	parkingService.trackCarWithColor(color);
+    }
+    
+    public void status() {
+        
+    	parkingService.status();
     }
 }

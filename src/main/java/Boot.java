@@ -35,10 +35,19 @@ public class Boot {
 					}
 				} else if(command.equals(ApplicationConstants.PARK)) {
 					
+					parkingClient.generateTicket(splitValues[1], splitValues[2]);
 				} else if(command.equals(ApplicationConstants.LEAVE)) {
 					
+					int convertedInt = convertRawToInt(splitValues[1]);
+					if(convertedInt > 0) {
+					
+						parkingClient.vacateSlot(convertedInt);
+					} else {
+						System.out.println("Incorrect command format. Please try again with correct format.");
+					}
 				} else if(command.equals(ApplicationConstants.STATUS)) {
 					
+					parkingClient.status();
 				} else if(command.equals(ApplicationConstants.REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOR)) {
 					
 				} else if(command.equals(ApplicationConstants.SLOT_NUMBERS_FOR_CARS_WITH_COLOR)) {

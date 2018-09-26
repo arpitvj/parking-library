@@ -16,8 +16,8 @@ public interface ParkingService {
 	
 	int checkCarSlot(String regNumber);
 	
-	List<Integer> trackCarWithColor(String color);
+	void trackCarWithColor(String color);
 	
-	List<ParkingSlot> status();
+	void status();
 	
 }
