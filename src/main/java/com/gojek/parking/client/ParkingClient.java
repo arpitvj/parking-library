@@ -15,7 +15,7 @@ public class ParkingClient
 	
 	ParkingService parkingService;
 	
-	ParkingClient(){
+	public ParkingClient(){
 		parkingService = new ParkingServiceImpl();
 	}
 	

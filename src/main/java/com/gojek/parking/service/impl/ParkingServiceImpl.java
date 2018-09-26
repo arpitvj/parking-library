@@ -7,6 +7,7 @@ import com.gojek.parking.service.ParkingService;
 
 public class ParkingServiceImpl implements ParkingService {
 
+
 	public String createSlot(int noOfSlots) {
 		// TODO Auto-generated method stub
 		return null;
