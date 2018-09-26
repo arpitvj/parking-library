@@ -16,7 +16,7 @@ $Bin/parking_lot
 
 For running the application in file mode
 ```
-Bin/parking_lot file_inputs.txt
+$Bin/parking_lot file_inputs.txt
 ```
 
 
