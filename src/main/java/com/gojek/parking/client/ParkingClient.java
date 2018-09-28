@@ -1,7 +1,5 @@
 package com.gojek.parking.client;
 
-import java.util.List;
-
 import com.gojek.parking.service.ParkingService;
 import com.gojek.parking.service.impl.ParkingServiceImpl;
 
@@ -10,15 +8,15 @@ import com.gojek.parking.service.impl.ParkingServiceImpl;
  * @author avijayvargiy
  * Parking client
  */
-public class ParkingClient 
+public class ParkingClient
 {
 	
-	ParkingService parkingService;
+	ParkingService parkingService; 
 	
-	public ParkingClient(){
+	public ParkingClient() {
 		parkingService = new ParkingServiceImpl();
 	}
-	
+
 	/**
 	 * Creates parking lots
 	 * @param noOfLots
@@ -60,13 +58,13 @@ public class ParkingClient
     }
     
     /**
-     * Returns the parking slot of the registration number of car
+     * Returns the parking slot of the registration number of vehicle
      * @param regNumber
      * @return
      */
-    public void checkCarPosition(String regNumber) {
+    public void checkVehiclePosition(String regNumber) {
     	
-    	parkingService.checkCarSlot(regNumber);
+    	parkingService.checkVehicleSlot(regNumber);
     }
     
     /**
@@ -74,11 +72,14 @@ public class ParkingClient
      * @param color
      * @return
      */
-    public void trackCarWithColor(String color) {
+    public void findVehicleWithColor(String color) {
     
-    	parkingService.trackCarWithColor(color);
+    	parkingService.findVehicleWithColor(color);
     }
     
+    /**
+     * Prints the status of occupied parking slots
+     */
     public void status() {
         
     	parkingService.status();

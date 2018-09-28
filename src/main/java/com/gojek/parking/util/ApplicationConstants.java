@@ -12,4 +12,12 @@ public class ApplicationConstants {
 	public static final String SLOT_NUMBER_FOR_REGISTRATION_NUMBER = "slot_number_for_registration_number";
 	public static final String EMPTY = "";
 	
+	public static int convertRawToInt(String value) {
+
+		try {
+			return Integer.valueOf(value);
+		} catch (NumberFormatException e) {
+			return -1;
+		}
+	}
 }

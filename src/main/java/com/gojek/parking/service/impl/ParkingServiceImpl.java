@@ -11,17 +11,36 @@ import com.gojek.parking.service.ParkingService;
 
 public class ParkingServiceImpl implements ParkingService {
 
+	/**
+	 * Application Data
+	 */
 	private List<ParkingSlot> parkingSlots = new ArrayList<ParkingSlot>();
-	private int maxSlotsOnEachLevel = 3;
-	private int lastSlotNumber = 0;
-	private int currentLevel = 0;
 	
+	/**
+	 * Considered maximum slots on each level
+	 */
+	private int maxSlotsOnEachLevel = 3;
+	
+	/**
+	 * Count of the parking slots
+	 */
+	private int lastSlotNumber = 0;
+	
+	/**
+	 * Running Parking Level
+	 */
+	private int currentLevel = 1;
+	
+	/**
+	 * Creates parking slots and prints the output
+	 * @param noOfSlots
+	 */
 	public void createSlot(int noOfSlots) {
 		
 		for(int i=0; i < noOfSlots; i++) {
 			
 			int newSlotNumber = lastSlotNumber + 1;
-			if(newSlotNumber > maxSlotsOnEachLevel) currentLevel++;
+			if(newSlotNumber > maxSlotsOnEachLevel * currentLevel) currentLevel++;
 			
 			parkingSlots.add(new ParkingSlot(lastSlotNumber + 1, currentLevel, false));
 			lastSlotNumber++;
@@ -30,6 +49,11 @@ public class ParkingServiceImpl implements ParkingService {
 		System.out.println("Created a parking lot with " + noOfSlots + " slots");
 	}
 
+	/**
+	 * Generates a ticket by allocating slot to vehicle. Prints the output
+	 * @param regNumber
+	 * @param color
+	 */
 	public void generateTicket(String regNumber, String color) {
 		
 		Optional<ParkingSlot> emptySlot = parkingSlots.stream().filter(p -> p.isOccupied() == false).findFirst()
@@ -45,6 +69,10 @@ public class ParkingServiceImpl implements ParkingService {
 		}		
 	}
 
+	/**
+	 * Removes the vehicle from slot and prints the output 
+	 * @param slotNumber
+	 */
 	public void vacateSlot(int slotNumber) {
 		
 		Optional<ParkingSlot> parkingSlot = parkingSlots.stream().filter(p -> p.getSlotNumber() == slotNumber).findFirst();
@@ -59,20 +87,39 @@ public class ParkingServiceImpl implements ParkingService {
 		System.out.println("Slot number "+ slotNumber +" is free");
 	}
 
+	/**
+	 * Prints the registration numbers of vehicle with the color specified
+	 * @param color
+	 */
 	public void registrationNumbers(String color) {
 		
-		List<String> slots = parkingSlots.stream().filter(p -> (p.isOccupied() == true) && (p.getVehicle().getColor().equals(color)))
-		.map(m -> m.getVehicle().getRegistrationNumber())
-		.collect(Collectors.toList());
+		List<String> slots = getRegistrationNumbersByColor(color);
 		
 		String slotsCommaSeparated = String.join(", ", slots);
 
 		System.out.println(slotsCommaSeparated);
 	}
-
-	public void checkCarSlot(String regNumber) {
+	
+	/**
+	 * Returns the registration numbers of vehicle based on Color
+	 * @param color
+	 * @return
+	 */
+	public List<String> getRegistrationNumbersByColor(String color) {
 		
-		Optional<ParkingSlot> parkingSlot = parkingSlots.stream().filter(p -> (p.isOccupied() == true) && (p.getVehicle().getRegistrationNumber().equals(regNumber))).findFirst();
+		return parkingSlots.stream().filter(p -> (p.isOccupied() == true) && (p.getVehicle().getColor().equals(color)))
+				.map(m -> m.getVehicle().getRegistrationNumber())
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Prints the vehicle slot of corresponding registration number
+	 * @param regNumber
+	 */
+	public void checkVehicleSlot(String regNumber) {
+		
+		Optional<ParkingSlot> parkingSlot = parkingSlots.stream().filter(p -> (p.isOccupied() == true) 
+				&& (p.getVehicle().getRegistrationNumber().equals(regNumber))).findFirst();
 		
 		parkingSlot.ifPresent(slot -> {
 			System.out.println(slot.getSlotNumber());
@@ -83,28 +130,67 @@ public class ParkingServiceImpl implements ParkingService {
 		}
 	}
 
-	public void trackCarWithColor(String color) {
+	/**
+	 * Prints the vehicle slots based on the color 
+	 * @param color
+	 */
+	public void findVehicleWithColor(String color) {
 		
-		List<String> slots = parkingSlots.stream().filter(p -> (p.isOccupied() == true) && (p.getVehicle().getColor().equals(color)))
-		.map(m -> String.valueOf(m.getSlotNumber()))
-		.collect(Collectors.toList());
+		List<String> slots = getSlotsBasedOnVehicleColor(color);
 		
 		String slotsCommaSeparated = String.join(", ", slots);
 
 		System.out.println(slotsCommaSeparated);
 	}
-
-	public void status() {
+	
+	/**
+	 * Returns the raw data of slot based on the vehicle color
+	 * @param color
+	 * @return
+	 */
+	public List<String> getSlotsBasedOnVehicleColor(String color) {
 		
-		System.out.printf("%10s %30s %20s", "Slot No.", "Registration No", "Colour");
+		List<String> slots = parkingSlots.stream().filter(p -> (p.isOccupied() == true) && (p.getVehicle().getColor().equals(color)))
+				.map(m -> String.valueOf(m.getSlotNumber()))
+				.collect(Collectors.toList());
+		
+		return slots;
+	}
+
+	/**
+	 * Prints the occupied slots
+	 */
+	public void status() {
+		String format = "%1$-10s  %2$-19s%3$-1s";
+		System.out.printf(format, "Slot No.", "Registration No", "Colour");
 		List<ParkingSlot> slots = parkingSlots.stream().filter(p -> (p.isOccupied() == true)).collect(Collectors.toList());
-			
+		
 		for (ParkingSlot parkingSlot : slots) {
 			int slotNumber = parkingSlot.getSlotNumber();
 			String registrationNumber = parkingSlot.getVehicle().getRegistrationNumber();
 			String colour = parkingSlot.getVehicle().getColor();
 			
-			System.out.printf("\n%10o %30s %20s", slotNumber, registrationNumber, colour);
+			System.out.printf("\n"+format, slotNumber, registrationNumber, colour);
 		}		
+		System.out.println("");
 	}
+	
+	/**
+	 * Returns raw data of all the occupied parking slots
+	 * @return
+	 */
+	public List<ParkingSlot> occupiedSlots() {
+		
+		return parkingSlots.stream().filter(p -> (p.isOccupied() == true)).collect(Collectors.toList());
+	}
+	
+	/**
+	 * Returns raw data of all parking slots
+	 * @return
+	 */
+	public List<ParkingSlot> allParkingSlots() {
+		
+		return parkingSlots;
+	}
+
 }

@@ -1,6 +1,8 @@
 package com.gojek.parking.service;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -13,13 +15,13 @@ import com.gojek.parking.model.data.ParkingSlot;
 import com.gojek.parking.model.data.Vehicle;
 import com.gojek.parking.service.impl.ParkingServiceImpl;
 
-public class ParkingServiceTest {/*
+public class ParkingServiceTest {
 
 	private ParkingService parkingService;
 	
-	*//**
+	/**
 	 * Test Data
-	 *//*
+	 */
 	static String TEST_REGN_NUMBER_1 = "KA-01-HH-1234";
 	static String TEST_REGN_NUMBER_2 = "KA-01-HH-9999";
 	static String TEST_REGN_NUMBER_3 = "KA-01-BB-0001";
@@ -44,59 +46,73 @@ public class ParkingServiceTest {/*
 	@Test
 	public void testCreateSlot() {
 		
-		List<ParkingSlot> expectedParkingSlots = new ArrayList<ParkingSlot>();
-		expectedParkingSlots.add(new ParkingSlot(1, Level.GROUND, false));
-		expectedParkingSlots.add(new ParkingSlot(2, Level.GROUND, false));
-		expectedParkingSlots.add(new ParkingSlot(3, Level.GROUND, false));
-		expectedParkingSlots.add(new ParkingSlot(4, Level.GROUND, false));
-		expectedParkingSlots.add(new ParkingSlot(5, Level.GROUND, false));
-		expectedParkingSlots.add(new ParkingSlot(6, Level.GROUND, false));
+		// Add new parking slots
+		parkingService.createSlot(6);
 		
-		//assertEquals("Created a parking lot with 6 slots", parkingService.createSlot(6));
-		
-		List<ParkingSlot> actualSlotList = parkingService.status();
-		
-		assertEquals(expectedParkingSlots, actualSlotList);
+		List<ParkingSlot> actualSlotList = parkingService.allParkingSlots();
+		assertEquals(6, actualSlotList.size());
 	}
 	
 	@Test
 	public void testGenerateTicket() {
 		
 		// Add a new parking slot
-		List<ParkingSlot> expectedParkingSlots = new ArrayList<ParkingSlot>();
-		expectedParkingSlots.add(new ParkingSlot(1, Level.GROUND, false));
-		
 		parkingService.createSlot(1);
 		
-		List<ParkingSlot> actualSlotList = parkingService.status();
+		List<ParkingSlot> actualSlotList = parkingService.allParkingSlots();
 		
 		// Check if that parking slot is successfully added
-		assertEquals(expectedParkingSlots, actualSlotList);
+		assertEquals(1, actualSlotList.size());
 		
 		// Generate the parking ticket
-		String slotNumber = parkingService.generateTicket(TEST_REGN_NUMBER_1, TestVehicleColor.RED.toString());
+		parkingService.generateTicket(TEST_REGN_NUMBER_1, TestVehicleColor.RED.toString());
+		
+		List<ParkingSlot> occupiedSlotList = parkingService.occupiedSlots();
+		
+		int slotNumber = occupiedSlotList.get(0).getSlotNumber();
+		int level = occupiedSlotList.get(0).getLevel();
+		String vehicleRegNumber = occupiedSlotList.get(0).getVehicle().getRegistrationNumber();
+		String color = occupiedSlotList.get(0).getVehicle().getColor();
 		
 		assertEquals(1, slotNumber);
+		assertEquals(1, level);
+		assertEquals(TEST_REGN_NUMBER_1, vehicleRegNumber);
+		assertEquals(TestVehicleColor.RED.toString(), color);
 	}
 	
 	@Test
 	public void testVacateSlot() {
 		
 		// Add a new parking slot
-		List<ParkingSlot> expectedParkingSlots = new ArrayList<ParkingSlot>();
-		expectedParkingSlots.add(new ParkingSlot(1, Level.GROUND, false));
-		
 		parkingService.createSlot(1);
 		
-		List<ParkingSlot> actualSlotList = parkingService.status();
+		List<ParkingSlot> actualSlotList = parkingService.allParkingSlots();
 		
 		// Check if that parking slot is successfully added
-		assertEquals(expectedParkingSlots, actualSlotList.get(0).getSlotNumber());
-				
+		assertEquals(1, actualSlotList.size());
+		
+		// Generate the parking ticket
+		parkingService.generateTicket(TEST_REGN_NUMBER_1, TestVehicleColor.RED.toString());
+		
+		List<ParkingSlot> occupiedSlotList = parkingService.occupiedSlots();
+		
+		int slotNumber = occupiedSlotList.get(0).getSlotNumber();
+		int level = occupiedSlotList.get(0).getLevel();
+		String vehicleRegNumber = occupiedSlotList.get(0).getVehicle().getRegistrationNumber();
+		String color = occupiedSlotList.get(0).getVehicle().getColor();
+		
+		// Check if vehicle is successfully allotted a slot
+		assertEquals(1, slotNumber);
+		assertEquals(1, level);
+		assertEquals(TEST_REGN_NUMBER_1, vehicleRegNumber);
+		assertEquals(TestVehicleColor.RED.toString(), color);
+		
+		
 		parkingService.vacateSlot(1);
 		
-		List<ParkingSlot> slotStatus = parkingService.status();
+		List<ParkingSlot> slotStatus = parkingService.occupiedSlots();
 		
+		// Check if any slot is alloted
 		assertTrue(slotStatus.isEmpty());
 	}
 	
@@ -110,30 +126,17 @@ public class ParkingServiceTest {/*
 		parkingService.generateTicket(TEST_REGN_NUMBER_2, TestVehicleColor.GREEN.toString());
 		parkingService.generateTicket(TEST_REGN_NUMBER_3, TestVehicleColor.RED.toString());
 		
-		List<String> actualVehicleNumbers = parkingService.registrationNumbers(TestVehicleColor.RED.toString());
+		List<String> actualVehicleNumbers = parkingService.getRegistrationNumbersByColor(TestVehicleColor.RED.toString());
 		
 		List<String> expectedVehicleNumbers = new ArrayList<String>();
 		expectedVehicleNumbers.add(TEST_REGN_NUMBER_1);
 		expectedVehicleNumbers.add(TEST_REGN_NUMBER_3);
 		
-		assertEquals(expectedVehicleNumbers, actualVehicleNumbers);
+		assertEquals(actualVehicleNumbers, expectedVehicleNumbers);
 	}
 	
 	@Test
-	public void testCheckCarSlot() {
-	
-		// Add a new parking slot
-		parkingService.createSlot(1);
-		
-		String expectedSlotNumber = parkingService.generateTicket(TEST_REGN_NUMBER_1, TestVehicleColor.RED.toString());
-		
-		int actualSlotNumber = parkingService.checkCarSlot(TEST_REGN_NUMBER_1);
-		
-		assertEquals(expectedSlotNumber, String.valueOf(actualSlotNumber));
-	}
-	
-	@Test
-	public void testTrackCarWithColor() {
+	public void testFindVehicleWithColor() {
 		
 		// Add a new parking slot
 		parkingService.createSlot(3);
@@ -142,30 +145,27 @@ public class ParkingServiceTest {/*
 		parkingService.generateTicket(TEST_REGN_NUMBER_2, TestVehicleColor.GREEN.toString());
 		parkingService.generateTicket(TEST_REGN_NUMBER_3, TestVehicleColor.RED.toString());
 		
-		List<Integer> actualSlots = parkingService.trackCarWithColor(TestVehicleColor.RED.toString());
+		List<String> actualSlots = parkingService.getSlotsBasedOnVehicleColor(TestVehicleColor.RED.toString());
 		
-		List<Integer> expectedSlots = new ArrayList<Integer>();
-		expectedSlots.add(1);
-		expectedSlots.add(3);
+		List<String> expectedSlots = new ArrayList<String>();
+		expectedSlots.add("1");
+		expectedSlots.add("3");
 		
-		assertEquals(expectedSlots, actualSlots);
+		assertThat(actualSlots, is(expectedSlots));
 	}
 	
 	@Test
 	public void testStatus() {
 		
-		List<ParkingSlot> expectedParkingSlots = new ArrayList<ParkingSlot>();
-		expectedParkingSlots.add(new ParkingSlot(1, Level.GROUND, false, TEST_VEHICLE_1));
-		expectedParkingSlots.add(new ParkingSlot(2, Level.GROUND, false, TEST_VEHICLE_2));	
-		
 		// Add a new parking slot
 		parkingService.createSlot(3);
 		
+		// Created 3 slots, but assigned slots are 2
 		parkingService.generateTicket(TEST_REGN_NUMBER_1, TestVehicleColor.RED.toString());
 		parkingService.generateTicket(TEST_REGN_NUMBER_2, TestVehicleColor.GREEN.toString());
 		
-		List<ParkingSlot> actualParkingSlot = parkingService.status();
+		List<ParkingSlot> actualParkingSlot = parkingService.occupiedSlots();
 		
-		assertEquals(expectedParkingSlots, actualParkingSlot);
+		assertEquals(2, actualParkingSlot.size());
 	}
-*/}
+}
